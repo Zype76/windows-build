@@ -1,0 +1,21 @@
+---
+- name: Install puppet on a windows host
+  hosts: all
+  gather_facts: no
+  become: no
+  strategy: free
+  vars:
+    ansible_port: 5985
+    ansible_connection: winrm
+    ansible_winrm_transport: ntlm
+    ansible_winrm_server_cert_validation: ignore
+  vars_files:
+    - external_vars.yml
+
+- name: Download the puppet msi
+    win_get_url:
+      url: https://downloads.puppetlabs.com/windows/puppet5/puppet-agent-x64-latest.msi
+      dest: C:\Windows\temp\puppet-agent-x64-latest.msi
+
+  - name: Run the puppet installer
+    win_shell: msiexec /qn /norestart /i C:\Windows\temp\puppet-agent-x64-latest.msi
